@@ -1,0 +1,1087 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Felindra — Fleet Charging Intelligence</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Epilogue:wght@300;400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --ink: #0e1a12;
+    --ink-2: #2c3d2f;
+    --ink-3: #5a6b5d;
+    --paper: #f5f2eb;
+    --paper-2: #eceadf;
+    --paper-3: #e2dfd2;
+    --charge: #1a7a4a;
+    --charge-2: #10b981;
+    --charge-pale: #d0f0e1;
+    --amber: #c97b1a;
+    --amber-pale: #faecd0;
+    --line: rgba(14,26,18,0.12);
+    --serif: 'DM Serif Display', Georgia, serif;
+    --sans: 'Epilogue', system-ui, sans-serif;
+    --mono: 'Space Mono', monospace;
+    --nav-h: 64px;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: var(--sans);
+    background: var(--paper);
+    color: var(--ink);
+    line-height: 1.65;
+    font-size: 16px;
+    overflow-x: hidden;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    height: var(--nav-h);
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 48px;
+    background: var(--paper);
+    border-bottom: 1px solid var(--line);
+  }
+  .nav-logo {
+    font-family: var(--serif);
+    font-size: 22px;
+    color: var(--ink);
+    text-decoration: none;
+    letter-spacing: -0.01em;
+  }
+  .nav-logo span { color: var(--charge); }
+  .nav-links {
+    display: flex; gap: 32px; list-style: none;
+  }
+  .nav-links a {
+    font-size: 13px; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase;
+    color: var(--ink-3); text-decoration: none;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--charge); }
+  .nav-cta {
+    background: var(--ink);
+    color: var(--paper) !important;
+    padding: 8px 20px;
+    border-radius: 2px;
+  }
+  .nav-cta:hover { background: var(--charge); color: var(--paper) !important; }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    padding-top: var(--nav-h);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero-left {
+    padding: 80px 48px 80px 48px;
+    display: flex; flex-direction: column; justify-content: center;
+    position: relative; z-index: 2;
+  }
+  .hero-eyebrow {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--charge);
+    margin-bottom: 28px;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .hero-eyebrow::before {
+    content: '';
+    display: block; width: 32px; height: 1px;
+    background: var(--charge);
+  }
+  h1 {
+    font-family: var(--serif);
+    font-size: clamp(44px, 5.5vw, 80px);
+    line-height: 1.0;
+    color: var(--ink);
+    letter-spacing: -0.02em;
+    margin-bottom: 28px;
+  }
+  h1 em {
+    font-style: italic;
+    color: var(--charge);
+  }
+  .hero-sub {
+    font-size: 17px;
+    color: var(--ink-2);
+    max-width: 440px;
+    line-height: 1.7;
+    margin-bottom: 48px;
+    font-weight: 300;
+  }
+  .hero-actions {
+    display: flex; gap: 16px; align-items: center;
+  }
+  .btn-primary {
+    background: var(--ink);
+    color: var(--paper);
+    padding: 14px 32px;
+    font-family: var(--sans);
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    border: none; cursor: pointer;
+    text-decoration: none;
+    border-radius: 2px;
+    transition: background 0.2s;
+    display: inline-block;
+  }
+  .btn-primary:hover { background: var(--charge); }
+  .btn-outline {
+    border: 1px solid var(--line);
+    background: transparent;
+    color: var(--ink);
+    padding: 13px 28px;
+    font-family: var(--sans);
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    cursor: pointer;
+    text-decoration: none;
+    border-radius: 2px;
+    transition: border-color 0.2s, color 0.2s;
+    display: inline-block;
+  }
+  .btn-outline:hover { border-color: var(--charge); color: var(--charge); }
+
+  .hero-right {
+    background: var(--paper-2);
+    position: relative;
+    overflow: hidden;
+    border-left: 1px solid var(--line);
+  }
+  .hero-viz {
+    position: absolute;
+    inset: 0;
+    display: flex; align-items: center; justify-content: center;
+    padding: 48px;
+  }
+  .hero-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    width: 100%;
+  }
+  .stat-card {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    padding: 24px 20px;
+    position: relative;
+  }
+  .stat-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: var(--charge);
+  }
+  .stat-card.amber::before { background: var(--amber); }
+  .stat-number {
+    font-family: var(--serif);
+    font-size: 38px;
+    color: var(--ink);
+    line-height: 1;
+    margin-bottom: 6px;
+  }
+  .stat-label {
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    margin-bottom: 10px;
+  }
+  .stat-desc {
+    font-size: 13px;
+    color: var(--ink-3);
+    line-height: 1.5;
+    font-weight: 300;
+  }
+  .charging-bar {
+    margin-top: 14px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .bar-track {
+    flex: 1; height: 4px;
+    background: var(--paper-3);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+  .bar-fill {
+    height: 100%; border-radius: 2px;
+    background: var(--charge-2);
+    animation: barIn 1.4s ease forwards;
+    width: 0%;
+  }
+  @keyframes barIn { to { width: var(--w); } }
+  .bar-pct { font-family: var(--mono); font-size: 11px; color: var(--charge); }
+
+  /* grid lines bg */
+  .hero-right::after {
+    content: '';
+    position: absolute; inset: 0;
+    background-image:
+      linear-gradient(var(--line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--line) 1px, transparent 1px);
+    background-size: 32px 32px;
+    pointer-events: none;
+  }
+
+  /* SECTION COMMONS */
+  section { position: relative; }
+  .section-inner {
+    max-width: 1160px;
+    margin: 0 auto;
+    padding: 100px 48px;
+  }
+  .section-label {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--charge);
+    margin-bottom: 20px;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .section-label::before {
+    content: '';
+    display: block; width: 24px; height: 1px;
+    background: var(--charge);
+  }
+  h2 {
+    font-family: var(--serif);
+    font-size: clamp(34px, 4vw, 58px);
+    line-height: 1.05;
+    color: var(--ink);
+    letter-spacing: -0.02em;
+    margin-bottom: 20px;
+  }
+  h2 em { font-style: italic; color: var(--charge); }
+  .section-intro {
+    font-size: 17px;
+    font-weight: 300;
+    color: var(--ink-2);
+    max-width: 560px;
+    line-height: 1.7;
+    margin-bottom: 60px;
+  }
+
+  /* PROBLEM */
+  .problem-section { background: var(--ink); }
+  .problem-section .section-label { color: var(--charge-2); }
+  .problem-section .section-label::before { background: var(--charge-2); }
+  .problem-section h2 { color: var(--paper); }
+  .problem-section h2 em { color: var(--charge-2); }
+  .problem-section .section-intro { color: rgba(245,242,235,0.65); }
+  .problem-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: rgba(245,242,235,0.08);
+    border: 1px solid rgba(245,242,235,0.08);
+  }
+  .problem-card {
+    background: var(--ink);
+    padding: 36px 28px;
+    position: relative;
+  }
+  .problem-card:hover { background: var(--ink-2); }
+  .prob-icon {
+    width: 40px; height: 40px;
+    background: rgba(26,122,74,0.15);
+    border-radius: 2px;
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 20px;
+    color: var(--charge-2);
+    font-size: 18px;
+  }
+  .problem-card h3 {
+    font-family: var(--serif);
+    font-size: 22px;
+    color: var(--paper);
+    margin-bottom: 12px;
+    line-height: 1.2;
+  }
+  .problem-card p {
+    font-size: 14px;
+    color: rgba(245,242,235,0.55);
+    line-height: 1.7;
+    font-weight: 300;
+  }
+  .prob-num {
+    position: absolute; top: 28px; right: 28px;
+    font-family: var(--mono);
+    font-size: 11px;
+    color: rgba(245,242,235,0.2);
+    letter-spacing: 0.1em;
+  }
+
+  /* PRODUCT */
+  .product-section { background: var(--paper); }
+  .product-features {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px 60px;
+  }
+  .feature-item {
+    border-top: 1px solid var(--line);
+    padding-top: 28px;
+  }
+  .feature-tag {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--charge);
+    margin-bottom: 10px;
+    background: var(--charge-pale);
+    display: inline-block;
+    padding: 3px 8px;
+    border-radius: 2px;
+  }
+  .feature-item h3 {
+    font-family: var(--serif);
+    font-size: 26px;
+    line-height: 1.15;
+    color: var(--ink);
+    margin-bottom: 12px;
+    letter-spacing: -0.01em;
+  }
+  .feature-item p {
+    font-size: 15px;
+    color: var(--ink-2);
+    line-height: 1.7;
+    font-weight: 300;
+  }
+  .feature-metric {
+    margin-top: 16px;
+    display: flex; align-items: baseline; gap: 8px;
+  }
+  .feature-metric .m-val {
+    font-family: var(--serif);
+    font-size: 28px;
+    color: var(--charge);
+  }
+  .feature-metric .m-label {
+    font-size: 13px;
+    color: var(--ink-3);
+    font-weight: 400;
+  }
+
+  /* HOW IT WORKS */
+  .how-section { background: var(--paper-2); }
+  .how-steps {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0;
+    position: relative;
+  }
+  .how-steps::before {
+    content: '';
+    position: absolute;
+    top: 28px; left: 60px; right: 60px;
+    height: 1px;
+    background: var(--charge-pale);
+    border-top: 1px dashed var(--charge);
+    opacity: 0.6;
+  }
+  .step {
+    padding: 0 20px 0 0;
+    position: relative;
+  }
+  .step-dot {
+    width: 56px; height: 56px;
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--serif);
+    font-size: 22px;
+    color: var(--ink);
+    margin-bottom: 24px;
+    position: relative; z-index: 2;
+  }
+  .step:first-child .step-dot { background: var(--charge); color: var(--paper); border-color: var(--charge); }
+  .step h3 {
+    font-family: var(--serif);
+    font-size: 20px;
+    color: var(--ink);
+    margin-bottom: 10px;
+    line-height: 1.2;
+  }
+  .step p {
+    font-size: 13.5px;
+    color: var(--ink-3);
+    font-weight: 300;
+    line-height: 1.6;
+  }
+
+  /* TRACTION */
+  .traction-section { background: var(--paper); }
+  .traction-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+  }
+  .traction-card {
+    background: var(--paper-2);
+    border: 1px solid var(--line);
+    padding: 32px 28px;
+    border-radius: 4px;
+  }
+  .traction-card blockquote {
+    font-family: var(--serif);
+    font-size: 19px;
+    line-height: 1.45;
+    color: var(--ink);
+    font-style: italic;
+    margin-bottom: 20px;
+  }
+  .traction-card blockquote::before {
+    content: '\201C';
+    font-size: 36px;
+    color: var(--charge);
+    line-height: 0;
+    vertical-align: -0.4em;
+    margin-right: 4px;
+  }
+  .traction-attribution {
+    display: flex; align-items: center; gap: 12px;
+  }
+  .attr-avatar {
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    background: var(--charge);
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--paper);
+    flex-shrink: 0;
+  }
+  .attr-name {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--ink);
+  }
+  .attr-role {
+    font-size: 12px;
+    color: var(--ink-3);
+    font-weight: 300;
+  }
+
+  /* FOUNDER */
+  .founder-section { background: var(--ink-2); }
+  .founder-section .section-label { color: var(--charge-2); }
+  .founder-section .section-label::before { background: var(--charge-2); }
+  .founder-inner {
+    display: grid;
+    grid-template-columns: 380px 1fr;
+    gap: 80px;
+    align-items: start;
+  }
+  .founder-portrait {
+    position: relative;
+  }
+  .founder-img-frame {
+    width: 100%;
+    aspect-ratio: 3/4;
+    background: var(--ink);
+    border: 1px solid rgba(245,242,235,0.1);
+    border-radius: 4px;
+    display: flex; align-items: center; justify-content: center;
+    overflow: hidden;
+    position: relative;
+  }
+  .founder-initials {
+    font-family: var(--serif);
+    font-size: 96px;
+    color: rgba(245,242,235,0.1);
+    letter-spacing: -0.04em;
+    user-select: none;
+  }
+  .founder-name-plate {
+    position: absolute;
+    bottom: 20px; left: 20px; right: 20px;
+    background: rgba(14,26,18,0.85);
+    backdrop-filter: blur(8px);
+    padding: 16px 20px;
+    border-radius: 2px;
+    border-left: 3px solid var(--charge-2);
+  }
+  .founder-name-plate h3 {
+    font-family: var(--serif);
+    font-size: 24px;
+    color: var(--paper);
+    margin-bottom: 4px;
+  }
+  .founder-name-plate p {
+    font-size: 12px;
+    font-family: var(--mono);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--charge-2);
+  }
+  .founder-content h2 {
+    color: var(--paper);
+    margin-bottom: 24px;
+  }
+  .founder-content h2 em { color: var(--charge-2); }
+  .founder-bio {
+    font-size: 16px;
+    color: rgba(245,242,235,0.7);
+    line-height: 1.8;
+    font-weight: 300;
+    margin-bottom: 40px;
+  }
+  .founder-bio p { margin-bottom: 16px; }
+  .founder-bio p:last-child { margin-bottom: 0; }
+  .founder-tags {
+    display: flex; flex-wrap: wrap; gap: 10px;
+    margin-bottom: 40px;
+  }
+  .f-tag {
+    border: 1px solid rgba(16,185,129,0.3);
+    color: var(--charge-2);
+    padding: 6px 14px;
+    font-size: 12px;
+    font-family: var(--mono);
+    letter-spacing: 0.06em;
+    border-radius: 2px;
+  }
+  .founder-links {
+    display: flex; gap: 16px;
+  }
+
+  /* MARKET */
+  .market-section { background: var(--paper-3); }
+  .market-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 48px;
+    align-items: center;
+  }
+  .market-numbers {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+  .mnum-card {
+    padding: 28px 24px;
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 4px;
+  }
+  .mnum-card .m-big {
+    font-family: var(--serif);
+    font-size: 42px;
+    line-height: 1;
+    color: var(--ink);
+    margin-bottom: 6px;
+  }
+  .mnum-card .m-big span { color: var(--charge); }
+  .mnum-card .m-sub {
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    margin-bottom: 6px;
+  }
+  .mnum-card .m-detail {
+    font-size: 12.5px;
+    color: var(--ink-3);
+    font-weight: 300;
+    line-height: 1.5;
+  }
+
+  /* CTA */
+  .cta-section { background: var(--charge); }
+  .cta-inner {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 100px 48px;
+    text-align: center;
+  }
+  .cta-section h2 {
+    color: var(--paper);
+    margin-bottom: 20px;
+  }
+  .cta-section .section-intro {
+    color: rgba(245,242,235,0.8);
+    margin: 0 auto 48px;
+    max-width: 480px;
+  }
+  .btn-white {
+    background: var(--paper);
+    color: var(--charge);
+    padding: 16px 40px;
+    font-family: var(--sans);
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    border: none; cursor: pointer;
+    text-decoration: none;
+    border-radius: 2px;
+    transition: opacity 0.2s;
+    display: inline-block;
+  }
+  .btn-white:hover { opacity: 0.9; }
+
+  /* FOOTER */
+  footer {
+    background: var(--ink);
+    padding: 60px 48px 40px;
+  }
+  .footer-inner {
+    max-width: 1160px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    gap: 60px;
+    padding-bottom: 48px;
+    border-bottom: 1px solid rgba(245,242,235,0.1);
+    margin-bottom: 32px;
+  }
+  .footer-brand .nav-logo { font-size: 26px; display: block; margin-bottom: 16px; }
+  .footer-brand p {
+    font-size: 14px;
+    color: rgba(245,242,235,0.45);
+    font-weight: 300;
+    line-height: 1.7;
+    max-width: 280px;
+  }
+  .footer-col h4 {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--charge-2);
+    margin-bottom: 16px;
+  }
+  .footer-col ul { list-style: none; }
+  .footer-col ul li { margin-bottom: 10px; }
+  .footer-col ul a {
+    font-size: 14px;
+    color: rgba(245,242,235,0.5);
+    text-decoration: none;
+    font-weight: 300;
+    transition: color 0.2s;
+  }
+  .footer-col ul a:hover { color: var(--paper); }
+  .footer-bottom {
+    max-width: 1160px;
+    margin: 0 auto;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .footer-bottom p {
+    font-size: 12px;
+    color: rgba(245,242,235,0.25);
+    font-family: var(--mono);
+  }
+
+  /* ANIMATIONS */
+  .fade-up {
+    opacity: 0;
+    transform: translateY(28px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+  .fade-up.in {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* DIVIDER */
+  .divider-line {
+    width: 100%;
+    height: 1px;
+    background: var(--line);
+  }
+
+  /* Live indicator */
+  .live-dot {
+    width: 7px; height: 7px;
+    background: var(--charge-2);
+    border-radius: 50%;
+    display: inline-block;
+    animation: pulse 2s infinite;
+    margin-right: 6px;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo">felin<span>dra</span></a>
+  <ul class="nav-links">
+    <li><a href="#product">Product</a></li>
+    <li><a href="#how">How it works</a></li>
+    <li><a href="#market">Market</a></li>
+    <li><a href="#founder">Founder</a></li>
+    <li><a href="#contact" class="nav-cta">Request Demo</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-left fade-up in">
+    <div class="hero-eyebrow">Fleet Charging Intelligence</div>
+    <h1>Every fleet is<br><em>going electric.</em><br>None have the<br>software to match.</h1>
+    <p class="hero-sub">Felindra gives logistics operators real-time demand prediction, grid-cost optimisation, and predictive hardware maintenance — built specifically for high-volume EV fleets.</p>
+    <div class="hero-actions">
+      <a href="#contact" class="btn-primary">Request early access</a>
+      <a href="#product" class="btn-outline">See how it works</a>
+    </div>
+  </div>
+  <div class="hero-right">
+    <div class="hero-viz">
+      <div class="hero-stats">
+        <div class="stat-card">
+          <div class="stat-label">Today's demand forecast</div>
+          <div class="stat-number">87<span style="font-size:22px; color: var(--ink-3)">%</span></div>
+          <div class="stat-desc">Fleet readiness at 06:00 departure window</div>
+          <div class="charging-bar">
+            <div class="bar-track"><div class="bar-fill" style="--w: 87%;"></div></div>
+            <span class="bar-pct">87%</span>
+          </div>
+        </div>
+        <div class="stat-card amber">
+          <div class="stat-label">Grid cost saved</div>
+          <div class="stat-number">₹2.4<span style="font-size:16px; color: var(--ink-3)">L</span></div>
+          <div class="stat-desc">This month via off-peak charge shifting</div>
+          <div class="charging-bar">
+            <div class="bar-track"><div class="bar-fill" style="--w: 64%; background: var(--amber);"></div></div>
+            <span class="bar-pct" style="color: var(--amber)">64%</span>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Maintenance alerts</div>
+          <div class="stat-number">3</div>
+          <div class="stat-desc">Charger units flagged for inspection today</div>
+          <div style="margin-top:12px;">
+            <span style="font-family: var(--mono); font-size:11px; color: var(--charge); background: var(--charge-pale); padding: 3px 8px; border-radius: 2px;">
+              <span class="live-dot"></span> Live monitoring
+            </span>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Fleet arrival accuracy</div>
+          <div class="stat-number">94<span style="font-size:18px; color: var(--ink-3)">%</span></div>
+          <div class="stat-desc">Predicted vs. actual return times (±12 min)</div>
+          <div class="charging-bar">
+            <div class="bar-track"><div class="bar-fill" style="--w: 94%;"></div></div>
+            <span class="bar-pct">94%</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROBLEM -->
+<section class="problem-section">
+  <div class="section-inner">
+    <div class="section-label">The problem</div>
+    <h2>Diesel playbooks<br>don't survive <em>electrification.</em></h2>
+    <p class="section-intro">87% of logistics companies plan to electrify within 5 years. Not one of their existing fleet management systems was designed for what's coming.</p>
+
+    <div class="problem-grid fade-up">
+      <div class="problem-card">
+        <span class="prob-num">01</span>
+        <div class="prob-icon">⚡</div>
+        <h3>Unmanaged demand spikes</h3>
+        <p>When 40 trucks return to a depot simultaneously, uncoordinated charging triggers demand peaks that can cost operators ₹8–15L in a single billing cycle.</p>
+      </div>
+      <div class="problem-card">
+        <span class="prob-num">02</span>
+        <div class="prob-icon">🔌</div>
+        <h3>Hardware failures surface late</h3>
+        <p>EV chargers degrade invisibly. A failed unit discovered at 04:00 means vehicles leave under-charged — and logistics SLAs collapse before dawn.</p>
+      </div>
+      <div class="problem-card">
+        <span class="prob-num">03</span>
+        <div class="prob-icon">📍</div>
+        <h3>Blind arrival scheduling</h3>
+        <p>Without accurate return-time modelling, depots pre-charge in bulk hours early — burning peak-rate electricity on vehicles that won't move for six hours.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRODUCT -->
+<section class="product-section" id="product">
+  <div class="section-inner">
+    <div class="section-label">The platform</div>
+    <h2>Four engines.<br>One <em>intelligent</em> depot.</h2>
+    <p class="section-intro">Felindra sits between your telematics data, your charger hardware, and your energy provider — turning raw signals into decisions your operations team can actually act on.</p>
+
+    <div class="product-features">
+      <div class="feature-item fade-up">
+        <span class="feature-tag">Demand prediction</span>
+        <h3>Charging session forecasting</h3>
+        <p>Using historical fleet patterns, route telemetry, and real-time location data, Felindra predicts when each vehicle will return and how much charge it will need — up to 6 hours in advance.</p>
+        <div class="feature-metric">
+          <span class="m-val">±8min</span>
+          <span class="m-label">average prediction window for 50+ vehicle fleets</span>
+        </div>
+      </div>
+      <div class="feature-item fade-up">
+        <span class="feature-tag">Grid optimisation</span>
+        <h3>Smart charge time shifting</h3>
+        <p>Felindra reads your discom's time-of-use tariff schedule and sequences vehicle charging to maximise off-peak consumption — cutting demand charges without delaying dispatch.</p>
+        <div class="feature-metric">
+          <span class="m-val">22–31%</span>
+          <span class="m-label">reduction in energy cost per charge cycle</span>
+        </div>
+      </div>
+      <div class="feature-item fade-up">
+        <span class="feature-tag">Predictive maintenance</span>
+        <h3>Charger health monitoring</h3>
+        <p>Felindra tracks connector temperature, session failure patterns, output voltage drift, and charge ramp anomalies to flag hardware degradation before it becomes a breakdown.</p>
+        <div class="feature-metric">
+          <span class="m-val">14 days</span>
+          <span class="m-label">average advance warning before hardware failure</span>
+        </div>
+      </div>
+      <div class="feature-item fade-up">
+        <span class="feature-tag">Fleet modelling</span>
+        <h3>Arrival time intelligence</h3>
+        <p>ML models trained on your specific fleet's route behaviour — accounting for traffic, load weight, driver patterns, and seasonal variance — to produce depot-ready ETAs for each vehicle.</p>
+        <div class="feature-metric">
+          <span class="m-val">94%</span>
+          <span class="m-label">prediction accuracy across 3-shift fleet operations</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="how-section" id="how">
+  <div class="section-inner">
+    <div class="section-label">How it works</div>
+    <h2>From telematics<br>to <em>optimised</em> depot.</h2>
+    <p class="section-intro">Felindra plugs into your existing fleet telematics and charger network — no hardware replacement required.</p>
+
+    <div class="how-steps fade-up">
+      <div class="step">
+        <div class="step-dot">1</div>
+        <h3>Connect your fleet</h3>
+        <p>API integrations with leading telematics providers (Fleetx, Trakzee, Loconav) and OCPP-compatible chargers go live in under 48 hours.</p>
+      </div>
+      <div class="step">
+        <div class="step-dot">2</div>
+        <h3>Ingest & model</h3>
+        <p>Felindra ingests GPS, state-of-charge, route history, and energy tariff data. Fleet-specific ML models begin training from day one.</p>
+      </div>
+      <div class="step">
+        <div class="step-dot">3</div>
+        <h3>Predict & optimise</h3>
+        <p>The platform surfaces a daily charge schedule, prioritised maintenance queue, and cost forecast — updated continuously as conditions change.</p>
+      </div>
+      <div class="step">
+        <div class="step-dot">4</div>
+        <h3>Measure & adapt</h3>
+        <p>Operators see cost savings, prediction accuracy, and uptime metrics in a live depot dashboard. Models self-improve with each dispatch cycle.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MARKET -->
+<section class="market-section" id="market">
+  <div class="section-inner">
+    <div class="section-label">Market</div>
+    <div class="market-grid">
+      <div>
+        <h2>A $9B market with<br>no <em>purpose-built</em> tools.</h2>
+        <p class="section-intro" style="margin-bottom: 32px;">The EV fleet management software market is growing at 22.7% CAGR. Every logistics operator electrifying their fleet will need what Felindra builds. Today, none have it.</p>
+        <a href="#contact" class="btn-primary">Join the waitlist</a>
+      </div>
+      <div class="market-numbers">
+        <div class="mnum-card">
+          <div class="m-big">$9<span>B</span></div>
+          <div class="m-sub">Market size 2025</div>
+          <div class="m-detail">EV fleet management software, global</div>
+        </div>
+        <div class="mnum-card">
+          <div class="m-big">22<span>%</span></div>
+          <div class="m-sub">CAGR through 2030</div>
+          <div class="m-detail">Fastest-growing infrastructure software category</div>
+        </div>
+        <div class="mnum-card">
+          <div class="m-big">87<span>%</span></div>
+          <div class="m-sub">Fleet electrification intent</div>
+          <div class="m-detail">Operators planning EV transition within 5 years</div>
+        </div>
+        <div class="mnum-card">
+          <div class="m-big">0</div>
+          <div class="m-sub">Purpose-built alternatives</div>
+          <div class="m-detail">No incumbent offers predictive fleet-first charging intelligence</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TRACTION / QUOTES -->
+<section class="traction-section">
+  <div class="section-inner">
+    <div class="section-label">Early signal</div>
+    <h2>What fleet operators<br><em>actually say.</em></h2>
+    <p class="section-intro">Conversations with logistics operators across India have confirmed a gap no existing tool fills.</p>
+    <div class="traction-grid fade-up">
+      <div class="traction-card">
+        <blockquote>Our chargers are black boxes. We find out something's wrong when the truck doesn't leave on time.</blockquote>
+        <div class="traction-attribution">
+          <div class="attr-avatar">RM</div>
+          <div>
+            <div class="attr-name">Rahul M.</div>
+            <div class="attr-role">Operations Head, 60-vehicle express fleet</div>
+          </div>
+        </div>
+      </div>
+      <div class="traction-card">
+        <blockquote>We're paying peak-rate electricity bills we don't understand. Nobody has a tool to model this for us.</blockquote>
+        <div class="traction-attribution">
+          <div class="attr-avatar">SV</div>
+          <div>
+            <div class="attr-name">Sunita V.</div>
+            <div class="attr-role">CFO, last-mile logistics operator</div>
+          </div>
+        </div>
+      </div>
+      <div class="traction-card">
+        <blockquote>The moment I can tell each truck when to charge, I cut my depot's peak demand charge in half. That's real money.</blockquote>
+        <div class="traction-attribution">
+          <div class="attr-avatar">AK</div>
+          <div>
+            <div class="attr-name">Arjun K.</div>
+            <div class="attr-role">Depot Manager, FMCG distribution fleet</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOUNDER -->
+<section class="founder-section" id="founder">
+  <div class="section-inner">
+    <div class="section-label">Founder</div>
+    <div class="founder-inner">
+      <div class="founder-portrait fade-up">
+        <div class="founder-img-frame">
+          <span class="founder-initials">AG</span>
+          <div class="founder-name-plate">
+            <h3>Ashwar Gupta</h3>
+            <p>Founder & CEO, Felindra</p>
+          </div>
+        </div>
+      </div>
+      <div class="founder-content fade-up">
+        <h2>Built by someone who<br>knows <em>what breaks</em><br>on the ground.</h2>
+        <div class="founder-bio">
+          <p>Ashwar Gupta founded Felindra after spending years watching India's logistics sector pour capital into EVs while the operational software layer remained stuck in a diesel-era mindset. The question wasn't whether fleets would electrify — it was who would build the intelligence layer that made it actually work.</p>
+          <p>With a background spanning energy systems, data engineering, and fleet operations, Ashwar brings a rare combination of technical depth and operational instinct to a problem that has stumped incumbents for the simple reason that they never started from the depot floor upward.</p>
+          <p>Felindra is Ashwar's conviction that the critical infrastructure of India's electrification transition isn't the chargers themselves — it's the software layer that makes them intelligent.</p>
+        </div>
+        <div class="founder-tags">
+          <span class="f-tag">Energy Systems</span>
+          <span class="f-tag">Fleet Operations</span>
+          <span class="f-tag">ML / Data Engineering</span>
+          <span class="f-tag">B2B SaaS</span>
+          <span class="f-tag">India Logistics</span>
+        </div>
+        <div class="founder-links">
+          <a href="mailto:ashwar@felindra.io" class="btn-outline" style="border-color: rgba(16,185,129,0.3); color: var(--charge-2);">ashwar@felindra.io</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section" id="contact">
+  <div class="cta-inner fade-up">
+    <div class="section-label" style="justify-content: center; color: rgba(245,242,235,0.6);">
+      <span style="width: 24px; height: 1px; background: rgba(245,242,235,0.4); display: inline-block;"></span>
+      Early access
+    </div>
+    <h2>Ready to stop paying<br>for wasted electricity?</h2>
+    <p class="section-intro">We're onboarding our first 10 fleet operators in Q3 2025. Founding customers get 6 months free and permanent input into the product roadmap.</p>
+    <a href="mailto:ashwar@felindra.io" class="btn-white">Request a demo</a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <a href="#" class="nav-logo">felin<span>dra</span></a>
+      <p>Fleet charging intelligence for the electrification era. Built for Indian logistics operators who can't afford to figure it out by trial and error.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Platform</h4>
+      <ul>
+        <li><a href="#product">Demand forecasting</a></li>
+        <li><a href="#product">Grid optimisation</a></li>
+        <li><a href="#product">Predictive maintenance</a></li>
+        <li><a href="#product">Fleet modelling</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Company</h4>
+      <ul>
+        <li><a href="#founder">About</a></li>
+        <li><a href="#market">Market</a></li>
+        <li><a href="#contact">Contact</a></li>
+        <li><a href="mailto:ashwar@felindra.io">ashwar@felindra.io</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom" style="max-width: 1160px; margin: 0 auto;">
+    <p>© 2025 Felindra. All rights reserved.</p>
+    <p>Built for the electrification era.</p>
+  </div>
+</footer>
+
+<script>
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(el => {
+      if (el.isIntersecting) {
+        el.target.classList.add('in');
+      }
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+
+  // stagger children inside grids
+  document.querySelectorAll('.problem-grid, .product-features, .traction-grid, .how-steps').forEach(grid => {
+    grid.querySelectorAll(':scope > *').forEach((child, i) => {
+      child.style.transitionDelay = `${i * 0.08}s`;
+    });
+  });
+</script>
+</body>
+</html>
